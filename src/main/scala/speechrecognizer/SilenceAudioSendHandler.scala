@@ -1,3 +1,5 @@
+package speechrecognizer
+
 import net.dv8tion.jda.core.audio.AudioSendHandler
 
 //From https://github.com/wdavies973/VocalCord/blob/master/src/main/java/com/cpjd/speechGeneration/SilenceAudioSendHandler.java
@@ -10,8 +12,10 @@ class SilenceAudioSendHandler extends AudioSendHandler {
   private val startTime = System.currentTimeMillis
 
   override def provide20MsAudio: Array[Byte] = { // send the silence only for 5 seconds
-    if (((System.currentTimeMillis - startTime) / 1000) > 5) _canProvide = false
-    println("Sending silence")
+    if (((System.currentTimeMillis - startTime) / 1000) > 5) {
+      _canProvide = false
+      println("Finished Silence Sending")
+    }
     SilenceAudioSendHandler.silenceBytes
   }
 

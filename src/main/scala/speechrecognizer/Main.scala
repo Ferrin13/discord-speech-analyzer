@@ -1,3 +1,5 @@
+package speechrecognizer
+
 import net.dv8tion.jda.core.{AccountType, JDABuilder}
 
 object Main {
@@ -7,7 +9,7 @@ object Main {
     print("Initial Output")
     val jdaBuilder = new JDABuilder(AccountType.BOT)
     jdaBuilder.setToken(BOT_TOKEN)
-    jdaBuilder.addEventListener(new DemoListener())
+    jdaBuilder.addEventListener(new ServerListener())
     jdaBuilder.build()
   }
 }
