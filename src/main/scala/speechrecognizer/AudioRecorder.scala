@@ -43,7 +43,7 @@ class AudioRecorder extends AudioReceiveHandler {
 
     if(currentPacketIndex + 1 == PACKETS_PER_SECOND * SECONDS_PER_SECTION) {
       println("Writing file")
-      FileWriter.writeWavFile(userAudio.getUser.getId, audioSection, ServerListener.currentChanelName, ServerListener.recordingId)
+      AudioFileWriter.writeWavFile(userAudio.getUser.getId, audioSection, ServerListener.currentChanelName, ServerListener.recordingId)
       userPacketIndexMap.update(userId, 0)
     }
   }
