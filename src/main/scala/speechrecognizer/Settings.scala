@@ -26,6 +26,8 @@ object Settings {
   val SIGNATURE_WORD_MIN_RATIO: Double = config.getDouble("signature-word-min-ratio")
   val AUDIO_FILE_LOCATION_BASE: String = config.getString("audio-file-location-base")
   val AUDIO_COMBINE_FILE_DIRECTORY: String = config.getString("audio-combine-file-directory")
+  val AUDIO_FILE_UPLOAD_TIMEOUT_MS: Int = config.getInt("audio-file-upload-timeout-ms")
+  val GOOGLE_STORAGE_BUCKET_NAME: String = config.getString("google-storage-bucket-name")
 }
 
 

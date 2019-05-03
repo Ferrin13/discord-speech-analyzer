@@ -8,7 +8,7 @@ import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
 object Commands {
   implicit val executor: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
-  val DIVIDER_STRING = "------------------------------------------------------------------"
+  private final val DIVIDER_STRING = "------------------------------------------------------------------"
 
   def combine(args: List[String],
               voiceChannels: mutable.Buffer[VoiceChannel],

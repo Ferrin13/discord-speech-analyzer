@@ -9,8 +9,8 @@ import net.dv8tion.jda.core.audio.AudioReceiveHandler
 import scala.collection.JavaConverters._
 
 object AudioFileWriter {
-  val MAX_FILE_SIZE_FOR_COMBINE: Long = 1024 * 1000 //Prevent combine from picking up previous combine files
-  val AUDIO_FILE_EXTENSION = "wav"
+  final val AUDIO_FILE_EXTENSION = "wav"
+  private final val MAX_FILE_SIZE_FOR_COMBINE: Long = 1024 * 1000 //Prevent combine from picking up previous combine files
 
   val audioFormat = new AudioFormat(16000f, 16, 1, true, false)
 
@@ -24,7 +24,6 @@ object AudioFileWriter {
     AudioSystem.write(is, AudioFileFormat.Type.WAVE, new File( s"$dirPath${File.separator}$fileName.wav"))
 
     val endTime = System.currentTimeMillis()
-    println(s"Wrote file in ${endTime-startTime} ms")
   }
 
   //Test purposes only
@@ -73,7 +72,6 @@ object AudioFileWriter {
           combineFile
         )
         val duration = System.currentTimeMillis() - startTime
-        println(s"Combined files in $channelName for $userId in $duration ms")
         Right(duration)
       }
     } else {

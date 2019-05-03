@@ -6,7 +6,6 @@ import java.nio.file.Path
 import com.google.cloud.speech.v1._
 import com.google.cloud.storage.{BlobInfo, StorageOptions}
 import org.apache.commons.io.IOUtils
-import speechrecognizer.Utils.ListenableFutureDecorator
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -16,9 +15,8 @@ class VoiceRecognizer() {}
 object VoiceRecognizer {
   implicit val executor: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
 
-  final val BUCKET_NAME = "cs-436-final-project"
-  final val GC_PREFIX = s"gs://$BUCKET_NAME/"
-  final val DEFAULT_RECOGNITION_CONFIG: RecognitionConfig = RecognitionConfig.newBuilder
+  private final val GC_PREFIX = s"gs://${Settings.GOOGLE_STORAGE_BUCKET_NAME}/"
+  private final val DEFAULT_RECOGNITION_CONFIG: RecognitionConfig = RecognitionConfig.newBuilder
     .setSampleRateHertz(16000)
     .setLanguageCode("en-US")
     .build()
@@ -33,7 +31,6 @@ object VoiceRecognizer {
   }
 
   def uploadAndTranscribeFile(filePath: Path): Future[Either[String, Long]] = {
-//    val client: SpeechClient = SpeechClient.create()
     val startTime = System.currentTimeMillis()
 
     val transcriptionFilePath = changeExtension(filePath, "txt").toString
@@ -45,7 +42,6 @@ object VoiceRecognizer {
       case (false, true) => Future.successful(Left("Metadata file already exist"))
       case _ =>
         uploadFile(filePath).flatMap { gcPath =>
-          println(s"GC Path: $gcPath")
 
           // Performs speech recognition on the audio file
           asyncRecognize(gcPath).map{ response =>
@@ -72,29 +68,14 @@ object VoiceRecognizer {
       .setUri(gcPath)
       .build()
 
-    println("Initiating speech to text transcription")
     val response = client.longRunningRecognizeAsync(DEFAULT_RECOGNITION_CONFIG, audio)
+
+    //This while/sleep loop is extremely ugly, but it is what is shown in the Documention Example, the futures do not work by default
     while (!response.isDone) {
-      val metaDataFuture = response.peekMetadata()
-      if (metaDataFuture != null) {
-        metaDataFuture.asScala.map(data => {
-          println(s"Transcription of $gcPath ${data.getProgressPercent}% complete")
-        })
-      }
-      Thread.sleep(10000)
+      Thread.sleep(5000)
     }
     client.close()
     response.get()
-
-    //    response.getInitialFuture.asScala.map{response =>
-    //      if(response.isDone) {
-    //        val results = response.getResponse.asInstanceOf[LongRunningRecognizeResponse].getResultsList.asScala.toList
-    //        handleResults(results)
-    //      } else {
-    //        println("Response not done")
-    //      }
-    //    }
-    //    client.shutdown()
   }
 
   private def handleResults(results: List[SpeechRecognitionResult]): (String, Float) = {
@@ -108,16 +89,15 @@ object VoiceRecognizer {
     val transportOptions = StorageOptions
       .getDefaultHttpTransportOptions
       .toBuilder
-      .setConnectTimeout(300000)
-      .setReadTimeout(300000)
+      .setConnectTimeout(Settings.AUDIO_FILE_UPLOAD_TIMEOUT_MS)
+      .setReadTimeout(Settings.AUDIO_FILE_UPLOAD_TIMEOUT_MS)
       .build
 
     val storageOptions = StorageOptions.newBuilder.setTransportOptions(transportOptions).build
     val storage = storageOptions.getService
-    val bucket = storage.get(BUCKET_NAME)
+    val bucket = storage.get(Settings.GOOGLE_STORAGE_BUCKET_NAME)
 
     val fileName = filePath.toString
-    println(s"Beginning upload")
     val startTime = System.currentTimeMillis()
     val blobInfo = storage.create(
       BlobInfo
@@ -125,7 +105,6 @@ object VoiceRecognizer {
         .build(),
       IOUtils.toByteArray(new FileInputStream(new File(filePath.toString)))
     )
-    println(s"Uploaded file: $fileName in ${Utils.msAsSeconds(System.currentTimeMillis() - startTime)}")
     s"$GC_PREFIX$fileName"
   }
 

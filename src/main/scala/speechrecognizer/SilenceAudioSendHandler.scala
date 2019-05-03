@@ -14,7 +14,6 @@ class SilenceAudioSendHandler extends AudioSendHandler {
   override def provide20MsAudio: Array[Byte] = { // send the silence only for 5 seconds
     if (((System.currentTimeMillis - startTime) / 1000) > 5) {
       _canProvide = false
-      println("Finished Silence Sending")
     }
     SilenceAudioSendHandler.silenceBytes
   }

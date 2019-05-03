@@ -13,7 +13,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 object TranscriptionAnalyzer {
   implicit val executor: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
 
-  val TRANSCRIPTION_FILE_EXTENSION = "txt"
+  private final val TRANSCRIPTION_FILE_EXTENSION = "txt"
 
   //From https://www.ranks.nl/stopwords
   val LONG_STOP_WORDS = List("a","about","above","after","again","against","all","am","an","and","any","are","aren't","as",
@@ -74,7 +74,6 @@ object TranscriptionAnalyzer {
     val lemmas = transcriptionData.groupedLemmas
     val lemmasNoStop = lemmas.filter{case (s, _) => !TranscriptionAnalyzer.LONG_STOP_WORDS.contains(s.toLowerCase)}
 
-    println(s"Sanity check words length: ${words.length} lemmas length: ${lemmas.map(t => t._2).sum}")
     val novelWordPercentage = lemmas.length / words.length.toDouble
     val novelWordNoStopPercentage = lemmasNoStop.length / lemmasNoStop.map(t => t._2).sum.toDouble
     val swearPercentage = lemmas.filter{ case (s, _) => SWEAR_WORDS.contains(s) }.map(_._2).sum / words.length.toDouble
