@@ -94,7 +94,7 @@ object Commands {
           val contextualAnalysis = TranscriptionAnalyzer.contextualTranscriptionAnalysis(tData, tDataList)
           val text = basicAnalysis.totalWords match {
             case t if t >= Settings.MIN_WORDS_FOR_ANALYSIS => messageFromTranscriptionAnalysis(basicAnalysis, contextualAnalysis)
-            case _ => s"Skipped ${Utils.userIdToName(basicAnalysis.userId)} because he/she has less than ${Settings.MIN_WORDS_FOR_ANALYSIS} recorded words\n"
+            case _ => s"Skipped ${Utils.userIdToName(basicAnalysis.userId).getOrElse(basicAnalysis.userId)} because he/she has less than ${Settings.MIN_WORDS_FOR_ANALYSIS} recorded words\n"
           }
           text + DIVIDER_STRING
         }
