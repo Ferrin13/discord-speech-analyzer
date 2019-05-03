@@ -122,8 +122,6 @@ object TranscriptionAnalyzer {
   }
 }
 
-class TranscriptionAnalyzer {}
-
 case class TranscriptionData (
   userId: String,
   words: List[String],

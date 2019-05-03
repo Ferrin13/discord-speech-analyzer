@@ -15,15 +15,11 @@ object AudioFileWriter {
   val audioFormat = new AudioFormat(16000f, 16, 1, true, false)
 
   def writeWavFile(userId: String, bytesArray: Array[Byte], channelName: String, recordingId: String): Unit = {
-    val startTime = System.currentTimeMillis()
-
-    val is = AudioSystem.getAudioInputStream(audioFormat, new AudioInputStream(new ByteArrayInputStream(bytesArray), AudioReceiveHandler.OUTPUT_FORMAT, bytesArray.length))
+    val inputStream = AudioSystem.getAudioInputStream(audioFormat, new AudioInputStream(new ByteArrayInputStream(bytesArray), AudioReceiveHandler.OUTPUT_FORMAT, bytesArray.length))
     val fileName = s"${userId}_audio_${System.currentTimeMillis}"
     val dirPath = Utils.recordingDirectoryPath(channelName, userId, recordingId.toString)
     Utils.createIfNotExists(dirPath)
-    AudioSystem.write(is, AudioFileFormat.Type.WAVE, new File( s"$dirPath${File.separator}$fileName.wav"))
-
-    val endTime = System.currentTimeMillis()
+    AudioSystem.write(inputStream, AudioFileFormat.Type.WAVE, new File( s"$dirPath${File.separator}$fileName.wav"))
   }
 
   //Test purposes only

@@ -43,7 +43,6 @@ object VoiceRecognizer {
       case _ =>
         uploadFile(filePath).flatMap { gcPath =>
 
-          // Performs speech recognition on the audio file
           asyncRecognize(gcPath).map{ response =>
             val (transcription, confidence) = handleResults(response.getResultsList.asScala.toList)
 
@@ -70,7 +69,7 @@ object VoiceRecognizer {
 
     val response = client.longRunningRecognizeAsync(DEFAULT_RECOGNITION_CONFIG, audio)
 
-    //This while/sleep loop is extremely ugly, but it is what is shown in the Documention Example, the futures do not work by default
+    //This while/sleep loop is extremely ugly, but it is what is shown in the documentation's example, the futures do not work by default
     while (!response.isDone) {
       Thread.sleep(5000)
     }
