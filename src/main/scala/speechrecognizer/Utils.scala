@@ -9,8 +9,8 @@ import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
 object Utils {
-  val FILE_LOCATION_BASE = "RecordedAudio"
-  val COMBINE_FILE_DIRECTORY = "Combined"
+  private val FILE_LOCATION_BASE = Settings.AUDIO_FILE_LOCATION_BASE
+  private val COMBINE_FILE_DIRECTORY = Settings.AUDIO_COMBINE_FILE_DIRECTORY
 
   implicit class ListenableFutureDecorator[T](val f: ApiFuture[T]) extends AnyVal {
     def asScala(implicit e: Executor): Future[T] = {
@@ -42,8 +42,18 @@ object Utils {
     false
   }
 
+  def userIdToName(userId: String): Option[String] = {
+    Option(Settings.USER_ID_NICKNAME_MAP.get(userId))
+  }
+
   def msAsSeconds(milliseconds: Long): String = {
     s"${milliseconds / 1000.toDouble} seconds"
+  }
+  def formatDouble(num: Double): String = {
+    f"$num%1.3f"
+  }
+  def doubleAsPercentage(num: Double): String = {
+    f"${num * 100}%1.2f" + "%"
   }
 }
 

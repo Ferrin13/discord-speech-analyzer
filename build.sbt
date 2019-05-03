@@ -12,8 +12,9 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "net.dv8tion" % "JDA" % "3.8.3_462",
   "org.slf4j" % "slf4j-simple" % "1.6.4",
-  "com.sedmelluq" % "lavaplayer" % "1.3.16",
-  "edu.cmu.sphinx" % "sphinx4-core" %"5prealpha-SNAPSHOT",
+  "org.apache.commons" % "commons-io" % "1.3.2",
   "com.google.cloud" % "google-cloud-speech" % "0.80.0-beta",
-  "com.google.cloud" % "google-cloud-storage" % "1.70.0"
+  "com.google.cloud" % "google-cloud-storage" % "1.70.0",
+  "edu.stanford.nlp" % "stanford-corenlp" % "3.9.2",
+  "com.typesafe" % "config" % "1.3.4"
 )

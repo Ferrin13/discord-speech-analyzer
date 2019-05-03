@@ -6,7 +6,7 @@ import java.util.Collections
 import javax.sound.sampled._
 import net.dv8tion.jda.core.audio.AudioReceiveHandler
 
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 
 object AudioFileWriter {
   val MAX_FILE_SIZE_FOR_COMBINE: Long = 1024 * 1000 //Prevent combine from picking up previous combine files
@@ -30,7 +30,7 @@ object AudioFileWriter {
   //Test purposes only
   def combineAllUserRecordings(channelName: String, userId: String): Either[String, Long]  = {
     val lastRecordingId = new File(Utils.userDirectoryPath(channelName, userId)).listFiles()
-      .filter(f => f.isDirectory && f.getName != Utils.COMBINE_FILE_DIRECTORY )
+      .filter(f => f.isDirectory && f.getName != Settings.AUDIO_COMBINE_FILE_DIRECTORY )
       .map(_.getName)
 
     lastRecordingId.map(combineDirectoryFiles(channelName, userId, _)).toList.foreach {
@@ -42,7 +42,7 @@ object AudioFileWriter {
 
   def combineUserLastRecording(channelName: String, userId: String): Either[String, Long]  = {
     val lastRecordingId = new File(Utils.userDirectoryPath(channelName, userId)).listFiles()
-      .filter(f => f.isDirectory && f.getName != Utils.COMBINE_FILE_DIRECTORY )
+      .filter(f => f.isDirectory && f.getName != Settings.AUDIO_COMBINE_FILE_DIRECTORY)
       .map(_.getName)
       .sorted(Ordering[String].reverse)
       .headOption.getOrElse("NO LAST DIRECTORY")
@@ -80,26 +80,4 @@ object AudioFileWriter {
       Left("No recording files found for user")
     }
   }
-
-//  def userDirectoryPath(channelName: String, userId:String): String =
-//    s"$FILE_LOCATION_BASE${File.separator}$channelName${File.separator}$userId"
-//  def userCombinePath(channelName: String, userId:String): String =
-//    s"${userDirectoryPath(channelName, userId)}${File.separator}$COMBINE_FILE_DIRECTORY"
-//  def recordingDirectoryPath(channelName: String, userId: String, recordingId: String) =
-//    s"${userDirectoryPath(channelName, userId)}${File.separator}$recordingId"
-//
-//  def getUserIdsInChannelFolder(channelName: String): List[String] = {
-//    new File(s"$FILE_LOCATION_BASE${File.separator}$channelName").listFiles().map(_.getName).toList
-//  }
-//
-//  def getChannelDirectoryNames: List[String] = new File(FILE_LOCATION_BASE).listFiles().map(_.getName).toList
-//
-//  def createIfNotExists(path: String): Boolean = {
-//    val directory = new File(path)
-//    if(!directory.exists()) {
-//      directory.mkdirs()
-//      return true
-//    }
-//    false
-//  }
 }

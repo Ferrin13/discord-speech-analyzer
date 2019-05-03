@@ -13,8 +13,6 @@ class AudioRecorder extends AudioReceiveHandler {
   val PACKETS_PER_SECOND = 50
   val USER_INACTIVITY_TIMEOUT_MS = 5000
 
-//  val audioSection = new Array[Byte](BYTES_PER_SECOND * SECONDS_PER_SECTION)
-//  var currentPacketIndex = 0
   var fileWritten = false
   var userLastTimeRecorded: mutable.HashMap[String, Long] = mutable.HashMap()
   val userPacketIndexMap: mutable.HashMap[String, Int]  = new mutable.HashMap()
@@ -24,12 +22,7 @@ class AudioRecorder extends AudioReceiveHandler {
 
   override def canReceiveUser: Boolean = true
 
-  override def handleCombinedAudio(combinedAudio: CombinedAudio): Unit = {
-    val x = combinedAudio.getAudioData(DEFAULT_VOLUME)
-    if(!combinedAudio.getUsers.isEmpty) {
-      println(s"Received audio from ${combinedAudio.getUsers.toString}")
-    }
-  }
+  override def handleCombinedAudio(combinedAudio: CombinedAudio): Unit = ???
 
   override def handleUserAudio(userAudio: UserAudio): Unit = {
     val pcmPacket = userAudio.getAudioData(DEFAULT_VOLUME)

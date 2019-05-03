@@ -1,18 +1,15 @@
 package speechrecognizer
 
 import java.io.{File, FileInputStream, FileWriter}
+import java.nio.file.Path
 
 import com.google.cloud.speech.v1._
-import java.nio.file.{Files, Path, Paths}
-
-import Utils.ListenableFutureDecorator
-import com.google.cloud.storage.{Acl, BlobInfo, Storage, StorageOptions}
+import com.google.cloud.storage.{BlobInfo, StorageOptions}
 import org.apache.commons.io.IOUtils
+import speechrecognizer.Utils.ListenableFutureDecorator
 
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContextExecutor, Future}
-import scala.util.Success
-
 
 class VoiceRecognizer() {}
 
@@ -119,7 +116,6 @@ object VoiceRecognizer {
     val storage = storageOptions.getService
     val bucket = storage.get(BUCKET_NAME)
 
-//    val fileName = filePath.subpath(4, filePath.getNameCount).toString
     val fileName = filePath.toString
     println(s"Beginning upload")
     val startTime = System.currentTimeMillis()
